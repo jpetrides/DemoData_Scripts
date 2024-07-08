@@ -187,5 +187,5 @@ group by 1,2,3
 );
 ''') 
 
-# Close the connection
+# Close the connection to duckdb
 con.close()
