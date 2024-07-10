@@ -162,6 +162,11 @@ UPDATE hotel_reservations.main.Reservations3 SET ADR = ADR * (1 + (RANDOM() * 0.
 con.execute ('''alter table hotel_reservations.main.Reservations3 add RM_Revenue decimal (10,2);
 update hotel_reservations.main.Reservations3 SET RM_Revenue = ADR * LengthOfStay ;''')
 
+#fix reservation date that is throwing off the Total bookings metric
+con.execute(
+'''UPDATE hotel_reservations.main.Reservations3
+SET ReservationDate = CheckinDate - INTERVAL (1 + RANDOM() % 150) DAY;''')
+
 #Create hotel Revenue Daily Table
 con.execute ('''
 -- what is my daily occupancy, ADR, and RevPAR?
