@@ -32,7 +32,7 @@ columns = [
 ]
 
 # Define the path and filename for the Hyper file
-hyper_file_path = "/Users/jpetrides/Documents/Demo Data/Hotels/Hotel_Dim_Property.hyper"
+hyper_file_path = "/Users/jpetrides/Documents/Demo Data/Hotels/Jeeves Idea/data/Hotel_Dim_Property.hyper"
 
 # Define the number of rows to generate
 num_rows = 5000
@@ -42,7 +42,7 @@ with HyperProcess(telemetry=Telemetry.SEND_USAGE_DATA_TO_TABLEAU) as hyper:
     with Connection(endpoint=hyper.endpoint, database=hyper_file_path, create_mode=CreateMode.CREATE_AND_REPLACE) as connection:
         # Define columns properly for the TableDefinition
         table_definition = TableDefinition(
-            table_name='Extract',
+            table_name='D_Property',
             columns=[TableDefinition.Column(name, type) for name, type, _ in columns]
         )
         connection.catalog.create_table(table_definition)

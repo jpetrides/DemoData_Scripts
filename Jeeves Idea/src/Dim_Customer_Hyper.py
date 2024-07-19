@@ -15,7 +15,7 @@ columns = [
 ]
 
 # Define the path and filename for the Hyper file
-hyper_file_path = "/Users/jpetrides/Documents/Demo Data/Hotels/Dim_Customer.hyper"
+hyper_file_path = "/Users/jpetrides/Documents/Demo Data/Hotels/Jeeves Idea/data/Dim_Customer.hyper"
 
 # Define the number of rows to generate
 num_rows = 160000
@@ -25,7 +25,7 @@ with HyperProcess(telemetry=Telemetry.SEND_USAGE_DATA_TO_TABLEAU) as hyper:
     with Connection(endpoint=hyper.endpoint, database=hyper_file_path, create_mode=CreateMode.CREATE_AND_REPLACE) as connection:
         # Define columns properly for the TableDefinition
         table_definition = TableDefinition(
-            table_name='Extract',
+            table_name='D_Customer',
             columns=[TableDefinition.Column(name, type) for name, type, _ in columns]
         )
         connection.catalog.create_table(table_definition)

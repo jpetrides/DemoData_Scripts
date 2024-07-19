@@ -145,8 +145,10 @@ end;
 con.execute('''
 alter table hotel_reservations.main.Reservations3 add adult_count integer;
 alter table hotel_reservations.main.Reservations3 add child_count integer;
+alter table hotel_reservations.main.Reservations3 add total_guests integer;
 UPDATE hotel_reservations.main.Reservations3 SET adult_count = (RANDOM() * 3 + 1)::INTEGER;
 update hotel_reservations.main.Reservations3 set child_count = (RANDOM() * 0 + 4)::INTEGER;
+update hotel_reservations.main.Reservations3 set total_guests = adult_count + child_count;
 ''')
 
 #mix up the ADR a little bit so the hotels within a brand down't all have the same ADR
@@ -163,6 +165,7 @@ con.execute ('''alter table hotel_reservations.main.Reservations3 add RM_Revenue
 update hotel_reservations.main.Reservations3 SET RM_Revenue = ADR * LengthOfStay ;''')
 
 #fix reservation date that is throwing off the Total bookings metric
+#reservations should be between yesterday and 150 days ago
 con.execute(
 '''UPDATE hotel_reservations.main.Reservations3
 SET ReservationDate = CheckinDate - INTERVAL (1 + RANDOM() % 150) DAY;''')
@@ -175,6 +178,7 @@ select cast(c.date as date) as Hotel_Date
 ,r.HotelID 
 ,sum(r.ADR) as revenue
 ,count(*) as "Rm_Nights"
+,sum(total_guests) as total_guests
 ,100 as Available_Rooms
 from hotel_reservations.main.calendar_reference c 
 inner join  hotel_reservations.main.Reservations3 r
