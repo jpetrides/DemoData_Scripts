@@ -28,11 +28,12 @@ columns = [
     ("OpsManagerL2", SqlType.text(), lambda: f"OpsManagerL2{random.randint(1, 5)}"),
     ("Brand", SqlType.text(), lambda: random.choice(["Brand1", "Brand2", "Brand3", "Brand4", "Brand6", "Brand7"])),
     ("ADR_Comp",SqlType.int(), lambda: random.randint(150, 300)),
-    ("Rooms_Available",SqlType.int(), lambda: random.randint(40, 300))
+    ("Rooms_Available",SqlType.int(), lambda: random.randint(40, 300)),
+    ("Meeting_Space",SqlType.int(), lambda: random.randint(1000, 5000))
 ]
 
 # Define the path and filename for the Hyper file
-hyper_file_path = "/Users/jpetrides/Documents/Demo Data/Hotels/Jeeves Idea/data/Hotel_Dim_Property.hyper"
+hyper_file_path = "/Users/jpetrides/Documents/Demo Data/Hotels/Jeeves Idea/data/Dim_Property.hyper"
 
 # Define the number of rows to generate
 num_rows = 5000
