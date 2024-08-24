@@ -133,11 +133,11 @@ con.execute('''
 alter table hotel_reservations.main.Reservations3 add Brand varchar(50);
 UPDATE hotel_reservations.main.Reservations3 set Brand =  
 case 
-when ADR <=120 then 'Sleep Ease'
-when ADR <=170 then 'Breezeway Hotels'
-when ADR <=250 then 'Citrus and Sage'
-when ADR <=450 then 'Monarch Plaza'
-ELSE 'Empyrean Collection'
+when ADR <=120 then 'Palonia Select'
+when ADR <=170 then 'Palonia Hotel'
+when ADR <=250 then 'Palonia Hotel'
+when ADR <=450 then Palonia LUX'
+ELSE 'Palonia LUX'
 end;
 ''')
 
@@ -171,6 +171,12 @@ con.execute(
 SET ReservationDate = CheckinDate - INTERVAL (1 + RANDOM() % 150) DAY;''')
 
 #Create hotel Revenue Daily Table
+#This helps us calculate daily occupancy, ADR, and RevPAR
+#This data sums up revenue and room nights per hotel per day
+
+#The second table is revenue and roomnights per reservation per day
+#we're also bringing in the reservation and customer ID so we don't 
+#need to join to the large reservations table.
 con.execute ('''
 -- what is my daily occupancy, ADR, and RevPAR?
 Create Table hotel_reservations.main.Hotel_Revenue_Daily as (
@@ -186,17 +192,20 @@ on c.date between  r.CheckinDate and r.CheckoutDate
 group by 1,2
 );
 
+             
+
 -- Where are my ADR and Room nights coming from?
 Create Table hotel_reservations.main.Hotel_Revenue_Daily_DTL as (
 select cast(c.date as date) as Hotel_Date
 ,r.HotelID 
 ,r.ReservationID
+,r.CustomerID
 ,sum(r.ADR) as revenue
 ,count(*) as "Rm_Nights"
 from hotel_reservations.main.calendar_reference c 
 inner join  hotel_reservations.main.Reservations3 r
 on c.date between  r.CheckinDate and r.CheckoutDate 
-group by 1,2,3
+group by 1,2,3,4
 );
 ''') 
 
