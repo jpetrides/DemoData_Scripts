@@ -119,7 +119,7 @@ def generate_sessions(start_date, end_date, machines_df):
             }
             
             if random.random() < CARDED_PLAY_PERCENTAGE:
-                session['CustomerID'] = f'CUSTOMER_{random.randint(1, TOTAL_CUSTOMERS)}'
+                session['CustomerID'] = f'Customer_{random.randint(1, TOTAL_CUSTOMERS)}'
             
             sessions.append(session)
     

@@ -44,3 +44,40 @@ GROUP BY
     EXTRACT(HOUR FROM Timestamp)
 ORDER BY 
     Hour;
+
+-- Shift transactions around for seasonality:
+WITH transactions_to_move AS (
+    SELECT SessionID, Timestamp
+    FROM hotel_reservations.main.F_Slots_Transactions
+    WHERE EXTRACT(MONTH FROM Timestamp) = 4  -- April - this is the month we are taking transactions from
+    ORDER BY RANDOM()  -- Randomize the selection
+    LIMIT 30000
+)
+UPDATE hotel_reservations.main.F_Slots_Transactions
+SET Timestamp = Timestamp - INTERVAL '3 months'
+WHERE SessionID IN (SELECT SessionID FROM transactions_to_move);
+
+/* CREATE VIEW FOR SESSIONS SUMMARY*/
+
+-- Create the materialized view
+CREATE VIEW MV_Slots_Sessions AS
+SELECT 
+    SessionID,
+    MachineID,
+    MIN(Timestamp) AS StartTime,
+    MAX(Timestamp) AS EndTime,
+    SUM(BetAmount) AS TotalBets,
+    SUM(PayoutAmount) AS TotalPayouts,
+    SUM(BetAmount) - SUM(PayoutAmount) AS Revenue,
+    COUNT(*) AS TransactionCount
+FROM 
+    F_Slots_Transactions
+GROUP BY 
+    SessionID, MachineID;
+
+/*
+--Volume
+    January being the busiest month, 
+    followed by May and December, 
+    April and June are the slowest.
+*/
