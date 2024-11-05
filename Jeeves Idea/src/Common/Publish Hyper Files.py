@@ -6,7 +6,7 @@ import os
 server_url = 'https://10ay.online.tableau.com/'  # Replace with your Tableau Cloud URL if different
 site_id = 'tableautth'  # Replace with your site ID
 token_name = 'Petrides_REST'
-token_value = 'qb4+tWvGScecmR/rE/QF5g==:lYDnKEfSkCAIBMtv9Ms6r4kx8v1AWKJS'
+token_value = 'rCvnj38TQ5isqY00sW92fg==:v1wGMKIiOzFsLI0nIyDKn9rKXhCnirvJ'
 project_name = 'Palonia_Inputs'  # Replace with your project name
 
 # Path to your .hyper file

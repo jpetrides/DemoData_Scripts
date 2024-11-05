@@ -64,6 +64,7 @@ CREATE VIEW MV_Slots_Sessions AS
 SELECT 
     SessionID,
     MachineID,
+    CustomerID,
     MIN(Timestamp) AS StartTime,
     MAX(Timestamp) AS EndTime,
     SUM(BetAmount) AS TotalBets,
@@ -73,7 +74,7 @@ SELECT
 FROM 
     F_Slots_Transactions
 GROUP BY 
-    SessionID, MachineID;
+    SessionID, MachineID, CustomerID;
 
 /*
 --Volume
