@@ -6,11 +6,11 @@ import os
 server_url = 'https://10ay.online.tableau.com/'  # Replace with your Tableau Cloud URL if different
 site_id = 'tableautth'  # Replace with your site ID
 token_name = 'Petrides_REST'
-token_value = 'rCvnj38TQ5isqY00sW92fg==:v1wGMKIiOzFsLI0nIyDKn9rKXhCnirvJ'
+token_value = '2i5nI1J6R8K2pHWFcqOdoQ==:xA8icfC7D8ZcpGXnyuzGJY9Ek3xqWoAr'
 project_name = 'Palonia_Inputs'  # Replace with your project name
 
 # Path to your .hyper file
-hyper_file_path = '/Users/jpetrides/Documents/Demo Data/Hotels/Jeeves Idea/data/Dim_Palonia_Cust.parquet'
+hyper_file_path = '/Users/jpetrides/Documents/Demo Data/Hotels/Jeeves Idea/data/Hotel/Dim_Property.hyper'
 
 # Authenticate and create a server object
 tableau_auth = TSC.PersonalAccessTokenAuth(token_name, token_value, site_id)

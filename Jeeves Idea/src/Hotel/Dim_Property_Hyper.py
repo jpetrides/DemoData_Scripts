@@ -33,7 +33,7 @@ columns = [
 ]
 
 # Define the path and filename for the Hyper file
-hyper_file_path = "/Users/jpetrides/Documents/Demo Data/Hotels/Jeeves Idea/data/Dim_Property.hyper"
+hyper_file_path = "/Users/jpetrides/Documents/Demo Data/Hotels/Jeeves Idea/data/Hotel/Dim_Property.hyper"
 
 # Define the number of rows to generate
 num_rows = 5000
