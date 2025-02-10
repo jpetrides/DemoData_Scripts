@@ -73,9 +73,9 @@ df = pd.DataFrame(records)
 
 # Output options - comment out the one you don't want to use
 # CSV output
-csv_file_path = "/Users/jpetrides/Downloads/flight_metrics_dataset.csv"
-df.to_csv(csv_file_path, index=False)
-print(f"Dataset successfully written to {csv_file_path}")
+#csv_file_path = "/Users/jpetrides/Downloads/flight_metrics_dataset.csv"
+#df.to_csv(csv_file_path, index=False)
+#print(f"Dataset successfully written to {csv_file_path}")
 
 # Parquet output
 parquet_file_path = "/Users/jpetrides/Downloads/flight_metrics_dataset.parquet"

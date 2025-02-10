@@ -67,7 +67,7 @@ for month in months:
             "Total_signups": signups
         })
 
-sequence_number += 1  # Increment sequence number
+        sequence_number += 1  # Increment sequence number
 
 # Create a DataFrame from the rows
 df = pd.DataFrame(all_rows)
