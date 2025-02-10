@@ -44,6 +44,7 @@ months = pd.date_range(start="2024-01-01", end="2025-02-01", freq="MS")
 
 # Prepare a list to hold all records
 all_rows = []
+sequence_number = 1  # Initialize sequence number
 
 # For each month, generate the records
 for month in months:
@@ -56,6 +57,7 @@ for month in months:
     for (combo, signups) in zip(combos, partition):
         channel, credit_card, geography, revenue, day_flag = combo
         all_rows.append({
+            "ID": sequence_number,
             "Month": month.strftime("%Y-%m"),  # Format: YYYY-MM
             "Channel": channel,
             "Credit_Card": credit_card,
@@ -65,10 +67,18 @@ for month in months:
             "Total_signups": signups
         })
 
+sequence_number += 1  # Increment sequence number
+
 # Create a DataFrame from the rows
 df = pd.DataFrame(all_rows)
 
 # Write the DataFrame to a CSV in the Downloads folder (for Mac user jpetrides)
-csv_file_path = "/Users/jpetrides/Downloads/rewards_signups.csv"
-df.to_csv(csv_file_path, index=False)
-print(f"Dataset successfully written to {csv_file_path}")
+#csv_file_path = "/Users/jpetrides/Downloads/rewards_signups.csv"
+#df.to_csv(csv_file_path, index=False)
+#print(f"Dataset successfully written to {csv_file_path}")
+
+
+# Parquet output
+parquet_file_path = "/Users/jpetrides/Downloads/rewards_signups.parquet"
+df.to_parquet(parquet_file_path, index=False)
+print(f"Dataset successfully written to {parquet_file_path}")

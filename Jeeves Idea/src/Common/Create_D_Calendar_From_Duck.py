@@ -7,8 +7,8 @@ db_path = '/Users/jpetrides/Documents/Demo Data/Hotels/Jeeves Idea/data/hotel_re
 table_name = 'hotel_reservations.main.calendar_reference'
 
 # Output file paths
-parquet_file_path = '/Users/jpetrides/Documents/Demo Data/Hotels/Jeeves Idea/data/Dim_Calendar.parquet'
-hyper_file_path = '/Users/jpetrides/Documents/Demo Data/Hotels/Jeeves Idea/data/Dim_Calendar.hyper'
+parquet_file_path = '/Users/jpetrides/Documents/Demo Data/Hotels/Jeeves Idea/data/Data - Common/Dim_Calendar.parquet'
+hyper_file_path = '/Users/jpetrides/Documents/Demo Data/Hotels/Jeeves Idea/data/Data - Common/Dim_Calendar.hyper'
 
 def duckdb_to_parquet():
     conn = duckdb.connect(db_path)
@@ -30,20 +30,21 @@ def parquet_to_hyper():
             
             print(f"Hyper file created successfully: {hyper_file_path}")
 
-def delete_temp_parquet():
-    try:
-        os.remove(parquet_file_path)
-        print(f"Temporary Parquet file deleted: {parquet_file_path}")
-    except OSError as e:
-        print(f"Error deleting temporary Parquet file: {e}")
+#def delete_temp_parquet():
+ #   try:
+  #      os.remove(parquet_file_path)
+   #     print(f"Temporary Parquet file deleted: {parquet_file_path}")
+    #except OSError as e:
+     #   print(f"Error deleting temporary Parquet file: {e}")
 
 if __name__ == "__main__":
     try:
         duckdb_to_parquet()
         parquet_to_hyper()
-        delete_temp_parquet()
+#        delete_temp_parquet()
         print("Script completed successfully.")
     except Exception as e:
         print(f"An error occurred: {e}")
         # If an error occurs, ensure we try to delete the temporary file
-        delete_temp_parquet()
+        #delete_temp_parquet()
+        

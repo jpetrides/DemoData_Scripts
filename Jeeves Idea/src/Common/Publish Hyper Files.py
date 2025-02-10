@@ -10,7 +10,8 @@ token_value = '2i5nI1J6R8K2pHWFcqOdoQ==:xA8icfC7D8ZcpGXnyuzGJY9Ek3xqWoAr'
 project_name = 'Palonia_Inputs'  # Replace with your project name
 
 # Path to your .hyper file
-hyper_file_path = '/Users/jpetrides/Documents/Demo Data/Hotels/Jeeves Idea/data/Hotel/Dim_Property.hyper'
+#hyper_file_path = '/Users/jpetrides/Documents/Demo Data/Hotels/Jeeves Idea/data/Hotel/Dim_Property.hyper'
+hyper_file_path = '/Users/jpetrides/Documents/Demo Data/Hotels/Jeeves Idea/data/Hotel/Dim_Property.parquet'
 
 # Authenticate and create a server object
 tableau_auth = TSC.PersonalAccessTokenAuth(token_name, token_value, site_id)

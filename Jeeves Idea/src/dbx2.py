@@ -3,7 +3,7 @@ import requests
 # Replace these with your actual values
 databricks_instance = "https://dbc-6fcbae34-bdbb.cloud.databricks.com/"  # e.g., https://<region>.azuredatabricks.net
 access_token = "dapib0e3106a246e3bcee955a75da831c2a1"
-user_email = "zzuberi@salesforce.com"
+user_email = "anesseth@salesforce.com"
 group_name = "tableau_solutions_engineers"
 
 # Headers for Databricks API
