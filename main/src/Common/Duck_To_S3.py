@@ -5,13 +5,13 @@ from botocore.exceptions import ClientError
 
 # DuckDB and table details
 duckdb_path = "/Users/jpetrides/Documents/Demo Data/Hotels/main/data/hotel_reservations.duckdb"
-table_name = "hotel_reservations.main.F_TC_Reservations"
+table_name = "hotel_reservations.main.D_TTH_Web_Event_Ref"
 
 # S3 details
 aws_access_key_id = 'AKIA2UC3EHDVWGYCA7P6'
 aws_secret_access_key = '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'
-s3_bucket_name = 'tc25'
-s3_file_name = 'TTH_F_Reservation.parquet'
+s3_bucket_name = 'tableauprepstage'
+s3_file_name = 'D_TTH_Web_Event_Ref.parquet'
 
 # Local file path for temporary storage
 local_file_path = 'temp_parquet.parquet'

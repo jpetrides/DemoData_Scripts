@@ -1,9 +1,9 @@
 import duckdb
 
 # Define the paths
-parquet_file_path = "/Users/jpetrides/Documents/Demo Data/S3sync/TTH_F_Relationship_Score.parquet"
-duckdb_path = "/Users/jpetrides/Documents/Demo Data/Hotels/Jeeves Idea/data/hotel_reservations.duckdb"
-table_name = "TTH_F_Relationship_Score"
+parquet_file_path = "/Users/jpetrides/Documents/Customers/Hotel/MGM/MGM_CrossChannel_Touchpoints1.parquet"
+duckdb_path = "/Users/jpetrides/Documents/Demo Data/Hotels/main/data/hotel_reservations.duckdb"
+table_name = "TTH_F_Cross_Channel_Tchpnt"
 
 # Connect to the DuckDB database
 con = duckdb.connect(duckdb_path)
