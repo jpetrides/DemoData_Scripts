@@ -8,11 +8,18 @@ import tableauhyperapi as hyper
 import subprocess
 import sys
 import pantab
+from dotenv import load_dotenv, find_dotenv
+from pathlib import Path
+
+# Load .env file from the main directory (two levels up from common)
+load_dotenv(find_dotenv())
 
 # Authentication parameters
-databricks_host = "https://dbc-e1c42ddb-0c95.cloud.databricks.com/"
-databricks_token = "dapi7f804aeef139a5043ee161541f79c164"  # Your Personal Access Token
-http_path = "/sql/1.0/warehouses/e8df06649d73a8b4"  # SQL warehouse HTTP path
+databricks_host = os.environ.get("databricks_host")
+databricks_token = os.environ.get("databricks_token")
+http_path = os.environ.get("http_path")
+
+
 
 # Output file configuration
 output_dir = os.path.expanduser("~/Documents/databricks")

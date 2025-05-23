@@ -5,8 +5,8 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 
 # Define paths
-csv_dir = "/Users/jpetrides/Documents/Demo Data/Vacation Club/Data"
-duckdb_path = "/Users/jpetrides/Documents/Demo Data/Hotels/Jeeves Idea/data/hotel_reservations.duckdb"
+csv_dir = "/Users/jpetrides/Documents/Customers/Hotel/MGM"
+duckdb_path = "/Users/jpetrides/Documents/Demo Data/Hotels/main/data/hotel_reservations.duckdb"
 
 # Function to convert CSV to Parquet
 def csv_to_parquet(csv_file, parquet_file):
@@ -15,7 +15,7 @@ def csv_to_parquet(csv_file, parquet_file):
     pq.write_table(table, parquet_file)
 
 # Convert CSV files to Parquet
-csv_files = ["lead_dataset.csv", "sales_rep_lookup.csv", "status_tracking.csv"]
+csv_files = ["Bradbourne_Data.csv"]
 parquet_files = [file.replace(".csv", ".parquet") for file in csv_files]
 
 for csv_file, parquet_file in zip(csv_files, parquet_files):
@@ -33,7 +33,7 @@ def insert_parquet_to_duckdb(parquet_file, table_name):
     print(f"Inserted data into {table_name} table")
 
 # Insert data into DuckDB
-table_names = ["TTH_Vclub_lead_dataset", "TTH_Vclub_sales_rep_lookup", "TTH_Vclub_status_tracking"]
+table_names = ["Bradbourne_Data"]
 
 for parquet_file, table_name in zip(parquet_files, table_names):
     parquet_path = os.path.join(csv_dir, parquet_file)

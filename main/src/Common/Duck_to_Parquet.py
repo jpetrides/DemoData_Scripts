@@ -6,13 +6,13 @@ duckdb_path = "/Users/jpetrides/Documents/Demo Data/Hotels/main/data/hotel_reser
 con = duckdb.connect(duckdb_path)
 
 # Set the table name you want to convert
-table_name = "hotel_reservations.main.calendar_reference"  # Change this to your desired table name
+table_name = "hotel_reservations.main.Page_View_Sankey"  # Change this to your desired table name
 #hotel_reservations.main.TTH_D_Customer
 #hotel_reservations.main.TTH_D_Property
 #hotel_reservations.main.TTH_F_Reservation
 
 # Set output directory to Downloads/Air_Parquet
-output_dir = os.path.expanduser("/Users/jpetrides/Documents/TC25_Files/Parquet_to_S3")
+output_dir = os.path.expanduser("/Users/jpetrides/Documents/Customers/Hotel/MGM")
 os.makedirs(output_dir, exist_ok=True)
 
 # Create output path with table name

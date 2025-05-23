@@ -1,9 +1,16 @@
 import duckdb
+import os
+from dotenv import load_dotenv, find_dotenv
+from pathlib import Path
+
+# Load .env file from the main directory (two levels up from common)
+load_dotenv(find_dotenv())
 
 # Define the paths
-parquet_file_path = "/Users/jpetrides/Documents/Customers/Hotel/MGM/MGM_CrossChannel_Touchpoints1.parquet"
-duckdb_path = "/Users/jpetrides/Documents/Demo Data/Hotels/main/data/hotel_reservations.duckdb"
-table_name = "TTH_F_Cross_Channel_Tchpnt"
+duckdb_path = os.environ.get("duckdb_path")
+parquet_file_path = "/Users/jpetrides/Documents/Customers/Hotel/MGM/MGM_CrossChannel_Touchpoints.parquet"
+#duckdb_path = "/Users/jpetrides/Documents/Demo Data/Hotels/main/data/hotel_reservations.duckdb"
+table_name = "TTH_F_Cross_Channel_Tchpnt2"
 
 # Connect to the DuckDB database
 con = duckdb.connect(duckdb_path)

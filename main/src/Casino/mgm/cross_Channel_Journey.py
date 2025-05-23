@@ -3,23 +3,18 @@ import numpy as np
 import os
 from datetime import datetime, timedelta
 import random
-import uuid
 import time
 from tqdm import tqdm
 
-# Start timer
-start_time = time.time()
-
 # Set random seed for reproducibility
 np.random.seed(42)
-random.seed(42)
 
 # File path
 output_path = "/Users/jpetrides/Documents/Customers/Hotel/MGM"
 output_file = "MGM_CrossChannel_Touchpoints.parquet"
 
 # Define parameters
-num_customers = 150000
+num_customers = 150000  # Full size for production
 start_date = datetime(2025, 3, 1)
 end_date = datetime(2025, 4, 30)
 date_range = (end_date - start_date).days + 1
@@ -32,13 +27,13 @@ touchpoints = {
     "Loyalty App Push Notification": 0.03,
     "Social Media Ad Click": 0.02,
     
-    # Online Actions (~70%)
+    # Online Actions (~69%)
     "Website Visit": 0.5,
     "Room Search": 0.09,
     "Room Booking": 0.03,
     "Restaurant Reservation": 0.03,
     "Show Ticket Purchase": 0.02,
-    "Casino App Activity": 0.04,  # Reduced from 0.05 to 0.04
+    "Casino App Activity": 0.04,
     
     # Offline Touchpoints (~10%)
     "Call Center Interaction": 0.03,
@@ -49,225 +44,156 @@ touchpoints = {
     "Loyalty Desk Interaction": 0.01
 }
 
-# Channel mapping
-channel_mapping = {
-    "Email Open": "Email",
-    "Email Click": "Email",
-    "Loyalty App Push Notification": "Mobile App",
-    "Social Media Ad Click": "Social Media",
-    "Website Visit": "Web",
-    "Room Search": "Web",
-    "Room Booking": "Web",
-    "Restaurant Reservation": "Web",
-    "Show Ticket Purchase": "Web",
-    "Casino App Activity": "Mobile App",
-    "Call Center Interaction": "Call Center",
-    "Front Desk Check-in": "Property",
-    "Casino Floor Activity": "Property",
-    "Restaurant Visit": "Property",
-    "Show Attendance": "Property",
-    "Loyalty Desk Interaction": "Property"
-}
-
 # Calculate and print the sum to verify
 probability_sum = sum(touchpoints.values())
 print(f"Sum of probabilities: {probability_sum}")
+
+# Double check with exact comparison
 assert probability_sum == 1.0, f"Touchpoint probabilities sum to {probability_sum}, not 1.0"
 
-# Probability of customer having any interaction
+# Probability of customer having any interaction (85% will have at least one)
 customer_activity_prob = 0.85
 
-# Average number of interactions per active customer
-avg_interactions_per_customer = 30
+# Average number of interactions per active customer (log-normal distribution)
+avg_interactions_per_customer = 30  # This will give us ~3.8M records
 
-# Optimized touchpoint data generation
-def generate_touchpoint_data_optimized():
+# Generate data
+def generate_touchpoint_data():
     print(f"Generating MGM customer touchpoint data for {num_customers:,} customers...")
+    data = []
     
-    # Pre-calculate customer activity (binary mask for which customers are active)
-    activity_mask = np.random.random(num_customers) < customer_activity_prob
-    active_customers = np.sum(activity_mask)
-    print(f"Active customers: {active_customers:,} ({active_customers/num_customers*100:.1f}%)")
+    # For progress tracking
+    active_customers = int(num_customers * customer_activity_prob)
     
-    # Pre-generate approximate total number of interactions
-    # Using log-normal distribution for interactions per customer
-    avg_log = np.log(avg_interactions_per_customer)
-    interactions_per_customer = np.random.lognormal(mean=avg_log, sigma=0.8, size=active_customers)
-    interactions_per_customer = np.clip(interactions_per_customer, 1, 200).astype(int)
-    total_interactions_est = np.sum(interactions_per_customer)
-    print(f"Estimated total interactions: {total_interactions_est:,}")
+    # Global event counter for sequential IDs
+    event_counter = 1
     
-    # Using estimated total as buffer size for pre-allocating arrays
-    # Pre-generate UUIDs (much faster in bulk)
-    print("Pre-generating UUIDs...")
-    uuid_buffer = [str(uuid.uuid4()) for _ in range(total_interactions_est)]
-    
-    # Process in chunks to manage memory
-    chunk_size = 10000  # Adjust based on available memory
-    num_chunks = (num_customers + chunk_size - 1) // chunk_size
-    
-    all_records = []
-    
-    print(f"Processing customers in {num_chunks} chunks...")
-    active_customer_idx = 0
-    
-    for chunk_idx in tqdm(range(num_chunks)):
-        start_idx = chunk_idx * chunk_size
-        end_idx = min((chunk_idx + 1) * chunk_size, num_customers)
-        chunk_customers = end_idx - start_idx
+    for i in tqdm(range(num_customers)):
+        customer_id = f"Customer_{i+1}"
         
-        # Get active customers in this chunk
-        chunk_activity = activity_mask[start_idx:end_idx]
-        chunk_active_count = np.sum(chunk_activity)
-        
-        if chunk_active_count == 0:
-            continue
-        
-        # Process each active customer in chunk
-        records = []
-        uuid_idx = 0
-        
-        for i in range(chunk_customers):
-            if not chunk_activity[i]:
-                continue
+        # Determine if this customer has any interactions
+        if random.random() < customer_activity_prob:
+            # Log-normal distribution for number of interactions
+            num_interactions = int(np.random.lognormal(mean=np.log(avg_interactions_per_customer), sigma=0.8))
+            num_interactions = max(1, min(num_interactions, 200))  # Cap at 200 interactions
+            
+            # Generate touchpoint sequence with time dependency
+            previous_date = None
+            journey_touchpoints = []
+            
+            for _ in range(num_interactions):
+                # Select touchpoint based on probabilities
+                touchpoint = np.random.choice(
+                    list(touchpoints.keys()),
+                    p=list(touchpoints.values())
+                )
                 
-            customer_id = f"Customer_{start_idx + i + 1}"
-            num_interactions = interactions_per_customer[active_customer_idx]
-            active_customer_idx += 1
-            
-            if num_interactions == 0:
-                continue
-                
-            # Generate first timestamp for this customer (random day in range)
-            random_day = random.randint(0, date_range - 1)
-            first_date = start_date + timedelta(days=random_day)
-            hour = random.randint(8, 23)
-            minute = random.randint(0, 59)
-            second = random.randint(0, 59)
-            first_timestamp = first_date.replace(hour=hour, minute=minute, second=second)
-            
-            # Generate subsequent timestamps
-            timestamps = [first_timestamp]
-            current_ts = first_timestamp
-            
-            # Pre-select touchpoints for this customer
-            touchpoint_names = list(touchpoints.keys())
-            touchpoint_probs = list(touchpoints.values())
-            customer_touchpoints = np.random.choice(
-                touchpoint_names,
-                size=num_interactions,
-                p=touchpoint_probs
-            )
-            
-            # Generate subsequent timestamps
-            for j in range(1, num_interactions):
-                # Exponential distribution for days between events
-                day_gap = min(14, max(0, int(np.random.exponential(scale=2))))
-                
-                if day_gap == 0:
-                    # Same day, just add hours/minutes
-                    hour_gap = random.randint(0, 5)
-                    minute_gap = random.randint(1, 59)
-                    new_ts = current_ts + timedelta(hours=hour_gap, minutes=minute_gap)
+                # Generate timestamp
+                if previous_date is None:
+                    # First interaction is uniformly distributed across the date range
+                    random_day = random.randint(0, date_range - 1)
+                    timestamp = start_date + timedelta(days=random_day)
+                    # Add random hour/minute
+                    timestamp += timedelta(
+                        hours=random.randint(8, 23),
+                        minutes=random.randint(0, 59),
+                        seconds=random.randint(0, 59)
+                    )
                 else:
-                    # Different day
-                    new_ts = current_ts + timedelta(days=day_gap)
-                    hour = random.randint(8, 23)
-                    minute = random.randint(0, 59)
-                    second = random.randint(0, 59)
-                    new_ts = new_ts.replace(hour=hour, minute=minute, second=second)
+                    # Subsequent interactions follow the previous one (within 0-14 days)
+                    day_gap = np.random.exponential(scale=2)  # Most interactions happen within a few days
+                    day_gap = min(14, max(0, int(day_gap)))  # Cap at 14 days
+                    
+                    # Some interactions happen on the same day
+                    if day_gap == 0:
+                        hour_gap = random.randint(0, 5)
+                        minute_gap = random.randint(1, 59)
+                        timestamp = previous_date + timedelta(hours=hour_gap, minutes=minute_gap)
+                    else:
+                        timestamp = previous_date + timedelta(days=day_gap)
+                        timestamp = timestamp.replace(
+                            hour=random.randint(8, 23),
+                            minute=random.randint(0, 59),
+                            second=random.randint(0, 59)
+                        )
                 
-                if new_ts <= end_date:
-                    timestamps.append(new_ts)
-                    current_ts = new_ts
-                
-                if current_ts > end_date:
-                    break
+                # Make sure timestamp is within our date range
+                if start_date <= timestamp <= end_date:
+                    # Generate sequential event_id
+                    event_id = event_counter
+                    event_counter += 1
+                    
+                    # Calculate epoch timestamp (seconds since 1970-01-01)
+                    epoch_time = int(timestamp.timestamp())
+                    
+                    # Add to journey touchpoints
+                    journey_touchpoints.append({
+                        'customer_id': customer_id,
+                        'event_id': event_id,
+                        'touchpoint': touchpoint,
+                        'timestamp': timestamp,
+                        'epoch_time': epoch_time
+                    })
+                    
+                    previous_date = timestamp
             
-            # Make sure we don't have more timestamps than touchpoints
-            actual_interactions = min(len(timestamps), num_interactions)
+            # Sort by timestamp after all touchpoints are created
+            journey_touchpoints.sort(key=lambda x: x['timestamp'])
             
-            # Build records for this customer
-            for j in range(actual_interactions):
-                touchpoint = customer_touchpoints[j]
-                records.append({
-                    'customer_id': customer_id,
-                    'event_id': uuid_buffer[uuid_idx],
-                    'touchpoint': touchpoint,
-                    'timestamp': timestamps[j],
-                    'channel': channel_mapping[touchpoint]
-                })
-                uuid_idx += 1
-        
-        # Sort records by timestamp
-        records.sort(key=lambda x: (x['customer_id'], x['timestamp']))
-        all_records.extend(records)
-        
-        # Periodically convert to DataFrame to save memory
-        if len(all_records) > 1000000:
-            print(f"Intermediate chunk: {len(all_records):,} records")
-            chunk_df = pd.DataFrame(all_records)
-            
-            # If first chunk, write with header
-            mode = 'w' if chunk_idx == 0 else 'a'
-            temp_path = os.path.join(output_path, "temp_" + output_file)
-            
-            # Write to temporary file
-            chunk_df.to_parquet(temp_path, index=False)
-            all_records = []
+            # Add all touchpoints to main data
+            data.extend(journey_touchpoints)
     
-    # Process any remaining records
-    final_df = pd.DataFrame(all_records) if all_records else None
+    # Convert to DataFrame
+    df = pd.DataFrame(data)
     
-    # Combine all chunks (if we wrote intermediate chunks)
-    if os.path.exists(os.path.join(output_path, "temp_" + output_file)):
-        if final_df is not None:
-            temp_path = os.path.join(output_path, "temp2_" + output_file)
-            final_df.to_parquet(temp_path, index=False)
-            
-            # Read and combine
-            chunks = [pd.read_parquet(os.path.join(output_path, "temp_" + output_file)),
-                     pd.read_parquet(os.path.join(output_path, "temp2_" + output_file))]
-            final_df = pd.concat(chunks, ignore_index=True)
-            
-            # Clean up temp files
-            os.remove(os.path.join(output_path, "temp_" + output_file))
-            os.remove(os.path.join(output_path, "temp2_" + output_file))
-        else:
-            # Just rename the temp file
-            temp_path = os.path.join(output_path, "temp_" + output_file)
-            final_df = pd.read_parquet(temp_path)
-            os.remove(temp_path)
-    else:
-        # We have all records in memory
-        if final_df is None:
-            print("No records generated!")
-            return None
+    # Add a channel column
+    channel_mapping = {
+        "Email Open": "Email",
+        "Email Click": "Email",
+        "Loyalty App Push Notification": "Mobile App",
+        "Social Media Ad Click": "Social Media",
+        "Website Visit": "Web",
+        "Room Search": "Web",
+        "Room Booking": "Web",
+        "Restaurant Reservation": "Web",
+        "Show Ticket Purchase": "Web",
+        "Casino App Activity": "Mobile App",
+        "Call Center Interaction": "Call Center",
+        "Front Desk Check-in": "Property",
+        "Casino Floor Activity": "Property",
+        "Restaurant Visit": "Property",
+        "Show Attendance": "Property",
+        "Loyalty Desk Interaction": "Property"
+    }
+    df['channel'] = df['touchpoint'].map(channel_mapping)
     
     # Ensure the directory exists
     os.makedirs(output_path, exist_ok=True)
     
     # Save to parquet
     full_path = os.path.join(output_path, output_file)
-    final_df.to_parquet(full_path, index=False)
+    df.to_parquet(full_path, index=False)
     
-    print(f"Generated {len(final_df):,} touchpoint records for {final_df['customer_id'].nunique():,} customers")
+    print(f"Generated {len(df):,} touchpoint records for {df['customer_id'].nunique():,} customers")
     print(f"Data saved to {full_path}")
     
-    # Return statistics
-    touchpoint_counts = final_df['touchpoint'].value_counts()
-    channel_counts = final_df['channel'].value_counts()
+    # Return some statistics
+    touchpoint_counts = df['touchpoint'].value_counts()
+    channel_counts = df['channel'].value_counts()
     
     return {
-        "total_records": len(final_df),
-        "unique_customers": final_df['customer_id'].nunique(),
+        "total_records": len(df),
+        "unique_customers": df['customer_id'].nunique(),
         "date_range": f"{start_date.date()} to {end_date.date()}",
         "touchpoint_distribution": touchpoint_counts.to_dict(),
         "channel_distribution": channel_counts.to_dict()
     }
 
+# Track execution time
+start_time = time.time()
+
 # Run generation
-stats = generate_touchpoint_data_optimized()
+stats = generate_touchpoint_data()
 
 # Display stats
 print("\nDataset Statistics:")
