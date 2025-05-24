@@ -7,9 +7,7 @@ con = duckdb.connect(duckdb_path)
 
 # Set the table name you want to convert
 table_name = "hotel_reservations.main.Page_View_Sankey"  # Change this to your desired table name
-#hotel_reservations.main.TTH_D_Customer
-#hotel_reservations.main.TTH_D_Property
-#hotel_reservations.main.TTH_F_Reservation
+
 
 # Set output directory to Downloads/Air_Parquet
 output_dir = os.path.expanduser("/Users/jpetrides/Documents/Customers/Hotel/MGM")
