@@ -1,5 +1,16 @@
 import boto3
 import os
+import os
+from dotenv import load_dotenv, find_dotenv
+from pathlib import Path
+
+load_dotenv(find_dotenv())
+# -------------- CONFIGURATION --------------
+
+aws_access_key = os.environ.get("aws_access_key_id") 
+aws_secret_key = os.environ.get("aws_secret_access_key")
+bucket_name = os.environ.get ("s3_bucket_name") 
+local_directory = '/Users/jpetrides/Documents/Demo Data/S3sync'
 
 def download_parquet_files(bucket_name, local_directory, aws_access_key, aws_secret_key):
     # Create S3 client
@@ -38,10 +49,6 @@ def download_parquet_files(bucket_name, local_directory, aws_access_key, aws_sec
     except Exception as e:
         print(f"Error: {str(e)}")
 
-# Usage example
-aws_access_key = 'AKIA2UC3EHDVWGYCA7P6'
-aws_secret_key = 'wD9ZX+QghzGTtFG0m5UZz8bDD47nzMs02pwPi6Xq'
-bucket_name = 'tableauprepstage'
-local_directory = '/Users/jpetrides/Documents/Demo Data/S3sync'
+
 
 download_parquet_files(bucket_name, local_directory, aws_access_key, aws_secret_key)

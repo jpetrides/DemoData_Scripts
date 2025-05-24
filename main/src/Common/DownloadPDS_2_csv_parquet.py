@@ -9,13 +9,18 @@ from tableauhyperapi import HyperProcess, Connection, Telemetry, TableName
 import pandas as pd
 from pathlib import Path
 import pantab
+from dotenv import load_dotenv, find_dotenv
+from pathlib import Path
+
+load_dotenv(find_dotenv())
 
 # ========== CONFIGURATION ==========
-TABLEAU_SITE_URL = "https://10ay.online.tableau.com/"
-TABLEAU_SITE_ID = "tableautth"  # Empty string if default
-TABLEAU_TOKEN_NAME = "Petrides_Rest"
-TABLEAU_TOKEN_SECRET = "+wYr44S4SOq6UMhDHZRO2A==:QCVfalFa0R1Fzoom6AnsZ43lhLsYfFs5"
+TABLEAU_SITE_URL = os.environ.get("TABLEAU_SERVER_URL")
+TABLEAU_SITE_ID = os.environ.get("TABLEAU_SITE_NAME")
+TABLEAU_TOKEN_NAME = os.environ.get("PAT_NAME")
+TABLEAU_TOKEN_SECRET = os.environ.get("PAT_SECRET")
 DATASOURCE_NAME = "Prep_DL_Test"
+
 
 # Output settings
 USER_HOME = str(Path.home())

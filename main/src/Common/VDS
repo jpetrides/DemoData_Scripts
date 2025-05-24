@@ -1,24 +1,36 @@
 import requests
 import json
 
+import os
+from dotenv import load_dotenv, find_dotenv
+from pathlib import Path
+
+load_dotenv(find_dotenv())
+# -------------- CONFIGURATION --------------
+TABLEAU_SERVER_URL = os.environ.get("TABLEAU_SERVER_URL")
+TABLEAU_SITE_NAME = os.environ.get("TABLEAU_SITE_NAME")
+PAT_NAME = os.environ.get("PAT_NAME")
+PAT_SECRET = os.environ.get("PAT_SECRET")
+TABLEAU_CLOUD_POD = os.environ.get("TABLEAU_CLOUD_POD")
+
 # --- Configuration ---
 # Replace with your Tableau Cloud details
-tableau_cloud_pod = "10ay" # e.g., "10az"
-tableau_cloud_site_id = "tableautth"       # e.g., "myco" or the content URL of your site
-pat_name = "PETRIDES_REST"                   # The name you gave your Personal Access Token
-pat_secret = "bMgiHfFWSQypyQbM5Cc92w==:1gdY8P4wJvNBHsU6HiGDwVvXKiaHxViG"               # The secret value of your Personal Access Token
+# tableau_cloud_pod = "10ay" # e.g., "10az"
+# tableau_cloud_site_id = "tableautth"       # e.g., "myco" or the content URL of your site
+# pat_name = "PETRIDES_REST"                   # The name you gave your Personal Access Token
+# pat_secret = "bMgiHfFWSQypyQbM5Cc92w==:1gdY8P4wJvNBHsU6HiGDwVvXKiaHxViG"               # The secret value of your Personal Access Token
 
 # Replace with the LUID of the published data source you want to query
 datasource_luid = "8e0b3b5c-0548-4dd2-a51b-d03232d49b76" # e.g., "a1b2c3d4-e5f6-7890-1234-abcdefghijkl"
 
 # --- Tableau REST API Sign-in (to get auth token) ---
-signin_url = f"https://{tableau_cloud_pod}.online.tableau.com/api/3.22/auth/signin" # Use appropriate API version
+signin_url = f"https://{TABLEAU_CLOUD_POD}.online.tableau.com/api/3.22/auth/signin" # Use appropriate API version
 signin_payload = {
     "credentials": {
-        "personalAccessTokenName": pat_name,
-        "personalAccessTokenSecret": pat_secret,
+        "personalAccessTokenName": PAT_NAME,
+        "personalAccessTokenSecret": PAT_SECRET,
         "site": {
-            "contentUrl": tableau_cloud_site_id
+            "contentUrl": TABLEAU_SITE_NAME
         }
     }
 }
@@ -92,7 +104,7 @@ vizql_query_payload = {
 
 # --- VizQL Data Service API Request ---
 # The endpoint uses api/v1/vizql-data-service/query-datasource
-vizql_url = f"https://{tableau_cloud_pod}.online.tableau.com/api/v1/vizql-data-service/query-datasource"
+vizql_url = f"https://{TABLEAU_CLOUD_POD}.online.tableau.com/api/v1/vizql-data-service/query-datasource"
 
 vizql_headers = {
     "Content-Type": "application/json",
@@ -130,7 +142,7 @@ finally:
     # --- Tableau REST API Sign-out (Optional but good practice) ---
     # You can sign out using the REST API
     if 'tableau_token' in locals(): # Check if token was successfully obtained
-        signout_url = f"https://{tableau_cloud_pod}.online.tableau.com/api/3.22/auth/signout"
+        signout_url = f"https://{TABLEAU_CLOUD_POD}.online.tableau.com/api/3.22/auth/signout"
         signout_headers = {
             "X-Tableau-Auth": tableau_token
         }

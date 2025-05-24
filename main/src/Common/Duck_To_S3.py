@@ -2,16 +2,25 @@ import duckdb
 import boto3
 import os
 from botocore.exceptions import ClientError
+from dotenv import load_dotenv, find_dotenv
+from pathlib import Path
+
+load_dotenv(find_dotenv())
+# -------------- CONFIGURATION --------------
+
+
+local_directory = '/Users/jpetrides/Documents/Demo Data/S3sync'
+s3_file_name = 'D_TTH_Web_Event_Ref.parquet'
 
 # DuckDB and table details
-duckdb_path = "/Users/jpetrides/Documents/Demo Data/Hotels/main/data/hotel_reservations.duckdb"
+duckdb_path = os.environ.get("duckdb_path") 
 table_name = "hotel_reservations.main.D_TTH_Web_Event_Ref"
 
 # S3 details
-aws_access_key_id = 'AKIA2UC3EHDVWGYCA7P6'
-aws_secret_access_key = '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'
-s3_bucket_name = 'tableauprepstage'
-s3_file_name = 'D_TTH_Web_Event_Ref.parquet'
+aws_access_key_id = os.environ.get("aws_access_key_id") 
+aws_secret_access_key = os.environ.get("aws_secret_access_key")
+s3_bucket_name = os.environ.get ("s3_bucket_name")
+
 
 # Local file path for temporary storage
 local_file_path = 'temp_parquet.parquet'

@@ -1,12 +1,17 @@
 import tableauserverclient as TSC
 from tableauserverclient.models import TableauAuth
-import os
 
-# Tableau Cloud site and authentication details
-server_url = 'https://10ay.online.tableau.com/'  # Replace with your Tableau Cloud URL if different
-site_id = 'tableautth'  # Replace with your site ID
-token_name = 'Petrides_REST'
-token_value = '2i5nI1J6R8K2pHWFcqOdoQ==:xA8icfC7D8ZcpGXnyuzGJY9Ek3xqWoAr'
+import os
+from dotenv import load_dotenv, find_dotenv
+from pathlib import Path
+
+load_dotenv(find_dotenv())
+# -------------- CONFIGURATION --------------
+TABLEAU_SERVER_URL = os.environ.get("TABLEAU_SERVER_URL")
+TABLEAU_SITE_NAME = os.environ.get("TABLEAU_SITE_NAME")
+PAT_NAME = os.environ.get("PAT_NAME")
+PAT_SECRET = os.environ.get("PAT_SECRET")
+
 project_name = 'Palonia_Inputs'  # Replace with your project name
 
 # Path to your .hyper file
@@ -15,8 +20,8 @@ project_name = 'Palonia_Inputs'  # Replace with your project name
 hyper_file_path = '/Users/jpetrides/Documents/Demo Data/Hotels/Jeeves Idea/data/Hotel/Dim_Property.parquet'
 
 # Authenticate and create a server object
-tableau_auth = TSC.PersonalAccessTokenAuth(token_name, token_value, site_id)
-server = TSC.Server(server_url, use_server_version=True)
+tableau_auth = TSC.PersonalAccessTokenAuth(PAT_NAME, PAT_SECRET, TABLEAU_SITE_NAME)
+server = TSC.Server(TABLEAU_SERVER_URL, use_server_version=True)
 
 try:
     with server.auth.sign_in(tableau_auth):
