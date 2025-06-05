@@ -13,12 +13,7 @@ PAT_NAME = os.environ.get("PAT_NAME")
 PAT_SECRET = os.environ.get("PAT_SECRET")
 TABLEAU_CLOUD_POD = os.environ.get("TABLEAU_CLOUD_POD")
 
-# --- Configuration ---
-# Replace with your Tableau Cloud details
-# tableau_cloud_pod = "10ay" # e.g., "10az"
-# tableau_cloud_site_id = "tableautth"       # e.g., "myco" or the content URL of your site
-# pat_name = "PETRIDES_REST"                   # The name you gave your Personal Access Token
-# pat_secret = "bMgiHfFWSQypyQbM5Cc92w==:1gdY8P4wJvNBHsU6HiGDwVvXKiaHxViG"               # The secret value of your Personal Access Token
+
 
 # Replace with the LUID of the published data source you want to query
 datasource_luid = "8e0b3b5c-0548-4dd2-a51b-d03232d49b76" # e.g., "a1b2c3d4-e5f6-7890-1234-abcdefghijkl"
