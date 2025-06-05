@@ -10,7 +10,7 @@ table_name = "hotel_reservations.main.Page_View_Sankey"  # Change this to your d
 
 
 # Set output directory to Downloads/Air_Parquet
-output_dir = os.path.expanduser("/Users/jpetrides/Documents/Customers/Hotel/MGM")
+output_dir = os.path.expanduser("/Users/jpetrides/Documents/Customers/Hotel")
 os.makedirs(output_dir, exist_ok=True)
 
 # Create output path with table name

@@ -76,8 +76,8 @@ def parquet_to_hyper(parquet_file_path, hyper_file_path, table_name="Extract"):
 
 # Example usage
 if __name__ == "__main__":
-    parquet_file = "/Users/jpetrides/Documents/Customers/Hotel/MGM/Page_View_Sankey.parquet"
-    hyper_file = "/Users/jpetrides/Documents/Customers/Hotel/MGM.hyper"
+    parquet_file = "/Users/jpetrides/Documents/Customers/Hotel/Page_View_Sankey.parquet"
+    hyper_file = "/Users/jpetrides/Documents/Customers/Hotel/.hyper"
     
     parquet_to_hyper(parquet_file, hyper_file)
     print("Conversion complete!")

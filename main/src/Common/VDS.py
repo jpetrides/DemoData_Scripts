@@ -72,8 +72,8 @@ vizql_query_payload = {
         "fields": [
             # Add fields you want to retrieve. Use the exact name or caption from the data source.
             # Example:
-             { "fieldCaption": "CallType" },
-            { "fieldCaption": "WaitTime", "function": "AVG" }, # Example with aggregation
+            { "fieldCaption": "CallType" },
+            { "fieldCaption": "WaitTime", "function": "SUM" }, # Example with aggregation
             # { "fieldCaption": "Order Date", "function": "YEAR" } # Example with date function
         ],
         "filters": [

@@ -5,7 +5,7 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 
 # Define paths
-csv_dir = "/Users/jpetrides/Documents/Customers/Hotel/MGM"
+csv_dir = "/Users/jpetrides/Documents/Customers/Hotel"
 duckdb_path = "/Users/jpetrides/Documents/Demo Data/Hotels/main/data/hotel_reservations.duckdb"
 
 # Function to convert CSV to Parquet
