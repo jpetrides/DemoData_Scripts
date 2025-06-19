@@ -10,11 +10,11 @@ load_dotenv(find_dotenv())
 
 
 local_directory = '/Users/jpetrides/Documents/Demo Data/S3sync'
-s3_file_name = 'D_TTH_Web_Event_Ref.parquet'
+s3_file_name = 'Hotel_Rev_Daily.parquet'
 
 # DuckDB and table details
 duckdb_path = os.environ.get("duckdb_path") 
-table_name = "hotel_reservations.main.D_TTH_Web_Event_Ref"
+table_name = "hotel_reservations.main.TTH_F_Revpar_DLY"
 
 # S3 details
 aws_access_key_id = os.environ.get("aws_access_key_id") 
